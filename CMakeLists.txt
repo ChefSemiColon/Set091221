@@ -48,7 +48,7 @@ target_include_directories(lib_engine INTERFACE "${CMAKE_SOURCE_DIR}/engine/" PU
 target_link_libraries(lib_engine lib_tile_level_loader lib_maths lib_ecm Box2D sfml-graphics sfml-audio)
 
 ## Zombie Escape
-file(GLOB_RECURSE SOURCES zombie_escape/*.cpp main/*.h)
+file(GLOB_RECURSE SOURCES zombie_escape/*.cpp zombie_escape/*.h)
 file(GLOB_RECURSE CMPNTS zombie_escape/components/*.cpp zombie_escape/components/*.h)
 file(GLOB_RECURSE SCENES zombie_escape/scenes/*.cpp zombie_escape/scenes/*.h)
 add_executable(ZOMBIE_ESCAPE ${SOURCES} ${RESOURCE_FILES})
