@@ -39,6 +39,7 @@ public:
   static void setVsync(bool b);
 
 private:
+  static sf::Cursor cursor;
   static Scene* _activeScene;
   static std::string _gameName;
   static void Update();

@@ -12,6 +12,7 @@ using namespace sf;
 using namespace std;
 Scene* Engine::_activeScene = nullptr;
 std::string Engine::_gameName;
+Cursor Engine::cursor;
 
 static bool loading = false;
 static float loadingspinner = 0.f;
@@ -86,6 +87,9 @@ void Engine::Start(unsigned int width, unsigned int height,
   _window = &window;
   Renderer::initialise(window);
   Physics::initialise();
+  window.setMouseCursor(cursor);
+  Engine::GetWindow().setMouseCursor(cursor);
+  GetWindow().setMouseCursorGrabbed(true);
   ChangeScene(scn);
   while (window.isOpen()) {
     Event event;
