@@ -41,6 +41,7 @@ add_library(lib_ecm STATIC ${SOURCE_FILES})
 target_include_directories(lib_ecm INTERFACE "${CMAKE_SOURCE_DIR}/lib_ecm" )
 target_link_libraries(lib_ecm PRIVATE lib_maths)
 
+# Engine
 file(GLOB_RECURSE SOURCE_FILES engine/*.cpp engine/*.h)
 add_library(lib_engine STATIC ${SOURCE_FILES} ${RESOURCE_FILES})
 target_include_directories(lib_engine INTERFACE "${CMAKE_SOURCE_DIR}/engine/" PUBLIC SYSTEM ${B2D_INCS} )
