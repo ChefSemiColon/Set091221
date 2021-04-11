@@ -18,7 +18,10 @@ void MenuScene::Load() {
 
 void MenuScene::Update(const double& dt) {
   // cout << "Menu Update "<<dt<<"\n";
-
+     if (sf::Keyboard::isKeyPressed(Keyboard::Num2)) {
+         Engine::GetWindow().setSize(Vector2u(1280,720));
+         Engine::ChangeScene(&game);
+     }
 
   Scene::Update(dt);
 }
