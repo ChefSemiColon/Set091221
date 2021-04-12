@@ -94,6 +94,11 @@ void Engine::Start(unsigned int width, unsigned int height,
   while (window.isOpen()) {
     Event event;
     while (window.pollEvent(event)) {
+        if (event.type == sf::Event::Resized)
+        {
+            sf::FloatRect visibleArea(0.f, 0.f, event.size.width, event.size.height);
+            window.setView(sf::View(visibleArea));
+        }
       if (event.type == Event::Closed) {
         window.close();
       }
