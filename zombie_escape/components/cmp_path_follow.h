@@ -5,7 +5,7 @@
 class PathfindingComponent : public Component {
 protected:
   std::vector<sf::Vector2i> _path;
-  size_t _index = 0;
+  size_t _index;
   double _elapsed = 0.0;
 
 public:

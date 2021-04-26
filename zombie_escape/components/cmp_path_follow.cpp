@@ -2,7 +2,7 @@
 #include "cmp_path_follow.h"
 #include "../astar.h"
 #include <LevelSystem.h>
-
+#define ls LevelSystem
 using namespace sf;
 using namespace std;
 
@@ -20,7 +20,7 @@ void PathfindingComponent::update(double dt) {
     }
 }
 
-PathfindingComponent::PathfindingComponent(Entity* p) : Component(p) {}
+PathfindingComponent::PathfindingComponent(Entity* p) : Component(p), _index(0) {}
 
 void PathfindingComponent::setPath(std::vector<sf::Vector2i>& path) {
     _index = 0;
