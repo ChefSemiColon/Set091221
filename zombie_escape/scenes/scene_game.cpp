@@ -27,10 +27,14 @@ Vector2f cameraSize;
 vector<shared_ptr<PathfindingComponent>> enemyPathfinding;
 sf::View view;
 
-float radius = 399.f;
-static int waveMax = 1000;
-float waveStartTimer = 0.0f;
-
+float radius = 405.f;
+static int waveMax = 10;
+float waveStartTimer = 20.0f;
+bool spawnOverTime = false;
+float spawnOverTimeTimerSet = 5.0f;
+float spawnOverTimeTimer = 0.0f;
+float OneSecondTimer = 1.0f;
+int numEnemiesAlive = 0;
 //picks a random position that is valid, spawns enemies off screen but near the player
 Vector2f getRandValidPos() {
 	Vector2f pos = Vector2f(float(rand() % 50 - 25), float(rand() % 50 - 25));
@@ -47,10 +51,12 @@ Vector2f getRandValidPos() {
 	return pos;
 }
 
-void setUpWave() {
-	for (int i = 0; i < waveMax; ++i) {
-		enemies[i]->setAlive(true);
-		enemies[i]->setPosition(getRandValidPos());
+void setUpWave(int enemiesAliveAlready, int numToSpawn) {
+	numToSpawn = numToSpawn + enemiesAliveAlready;
+	for (enemiesAliveAlready; enemiesAliveAlready < numToSpawn; ++enemiesAliveAlready) {
+		enemies[enemiesAliveAlready]->setAlive(true);
+		enemies[enemiesAliveAlready]->setPosition(getRandValidPos());
+		numEnemiesAlive++;
 	}
 }
 
@@ -63,11 +69,29 @@ void UpdatePath(int i) {
 	enemyPathfinding[i]->setPath(path);
 }
 
-void waveUpdate() {
+void waveUpdate(const double& dt) {
+	if (numEnemiesAlive == 0) {
+		auto waveMaxTemp = waveMax + (waveMax / 2);
+		waveMaxTemp <= 1000 ? waveMax = waveMaxTemp : waveMax = 1000;
+		waveStartTimer = 7.0f;
+		spawnOverTime = true;
+		spawnOverTimeTimer = spawnOverTimeTimerSet;
+	}
 
-
-	
-
+	if (OneSecondTimer < 0) {
+		if (spawnOverTime) {
+			int enemiesToSpawnNow = waveMax / spawnOverTimeTimerSet;
+			setUpWave(numEnemiesAlive, enemiesToSpawnNow);
+			spawnOverTimeTimer -= dt;
+			if (spawnOverTimeTimer <= 0) {
+				spawnOverTime = false;
+			}
+			OneSecondTimer = 1.0f;
+		}
+	}
+	else {
+		OneSecondTimer -= dt;
+	}
 }
 
 
@@ -90,7 +114,7 @@ void GameScene::Load() {
 	player->addTag("player");
 
 	//Enemies Pool
-	for (size_t n = 0; n < 1000; ++n) {
+	for (size_t n = 0; n < 2000; ++n) {
 		auto enemy = makeEntity();
 		enemy->setPosition(Vector2f(-100, -100));
 		auto s = enemy->addComponent<ShapeComponent>();
@@ -102,13 +126,13 @@ void GameScene::Load() {
 		auto sm = enemy->addComponent<StateMachineComponent>();
 		sm->addState("path", make_shared<PathState>(enemy, player));
 		sm->addState("seek", make_shared<SeekState>(enemy, player));
-		enemy->addComponent<HurtComponent>();
+		//enemy->addComponent<HurtComponent>();
 		auto decision = make_shared<DistanceDecision>(
 			player,
-			400.0f,
+			415.0f,
 			make_shared<SeekDecision>(),
 			make_shared<PathDecision>());
-		
+
 		enemy->addComponent<DecisionTreeComponent>(decision);
 		enemy->addTag("enemy");
 
@@ -116,8 +140,9 @@ void GameScene::Load() {
 	}
 
 	//First wave setup
-	setUpWave();
-	waveUpdate();
+	setUpWave(0, 1000);
+
+
 	//Bow2D Wall Colliders
 	auto walls = ls::findTiles(ls::WALL);
 	for (auto w : walls) {
@@ -128,19 +153,14 @@ void GameScene::Load() {
 		e->addComponent<PhysicsComponent>(false, Vector2f(200.f, 200.f));
 		e->setAlive(false);
 	}
-	setUpWave();
 }
 
 void GameScene::UnLoad() { player.reset(); ls::unload(); Scene::UnLoad(); }
 
 void GameScene::Update(const double& dt) {
+	waveUpdate(dt);
 
-	if (waveStartTimer < 0) {
-		//waveUpdate();
-	}
-	else {
-		waveStartTimer -= dt;
-	}
+
 	auto tempView = View(player->getPosition(), Vector2f(cameraSize));
 	tempView.zoom(10.5f);
 	tempView.zoom(0.05f);
