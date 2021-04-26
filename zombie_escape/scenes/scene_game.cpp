@@ -17,14 +17,16 @@
 #include "../steering_states.h"
 #include "../steering_decisions.h"
 #include "../components/cmp_hurt_player.h"
-
+#include "../game.h"
+#include "../components/cmp_bullet.h"
 using namespace std;
 using namespace std::chrono;
 using namespace sf;
 shared_ptr<Entity> player;
 vector<shared_ptr<Entity>> enemies;
+vector<shared_ptr<Entity>> bullets;
 Vector2f cameraSize;
-vector<shared_ptr<PathfindingComponent>> enemyPathfinding;
+shared_ptr<PathfindingComponent> ai;
 sf::View view;
 
 float radius = 405.f;
@@ -34,7 +36,7 @@ bool spawnOverTime = false;
 float spawnOverTimeTimerSet = 5.0f;
 float spawnOverTimeTimer = 0.0f;
 float OneSecondTimer = 1.0f;
-int numEnemiesAlive = 0;
+int numEnemiesAlive;
 //picks a random position that is valid, spawns enemies off screen but near the player
 Vector2f getRandValidPos() {
 	Vector2f pos = Vector2f(float(rand() % 50 - 25), float(rand() % 50 - 25));
@@ -58,15 +60,6 @@ void setUpWave(int enemiesAliveAlready, int numToSpawn) {
 		enemies[enemiesAliveAlready]->setPosition(getRandValidPos());
 		numEnemiesAlive++;
 	}
-}
-
-void UpdatePath(int i) {
-	auto relative_pos = Vector2i(player->getPosition()) - Vector2i(ls::getOffset());
-	auto tile_coord = relative_pos / (int)ls::getTileSize();
-	auto char_relative = enemies[i]->getPosition() - ls::getOffset();
-	auto char_tile = Vector2i(char_relative / ls::getTileSize());
-	auto path = pathFind(char_tile, tile_coord);
-	enemyPathfinding[i]->setPath(path);
 }
 
 void waveUpdate(const double& dt) {
@@ -139,9 +132,22 @@ void GameScene::Load() {
 		enemies.push_back(enemy);
 	}
 
-	//First wave setup
-	setUpWave(0, 1000);
+	//Bullet Pool
+	{
+		for (size_t n = 0; n < 500; ++n) {
+			auto bullet = makeEntity();
+			bullet->setPosition({ -1000,-1000 });
+			bullet->setAlive(false);
+			auto s = bullet->addComponent<ShapeComponent>();
+			s->setShape<RectangleShape>(Vector2f(10.0f, 10.0f));
+			s->getShape().setFillColor(Color::White);
+			bullet->addComponent<Bullet>();
+		}
+	}
 
+
+	//First wave setup
+	setUpWave(0, 10);
 
 	//Bow2D Wall Colliders
 	auto walls = ls::findTiles(ls::WALL);
