@@ -1,6 +1,6 @@
 //"cmp_ai_steering.cpp"
 #include "cmp_ai_steering.h"
-
+#include "../lib_tile_level_loader/LevelSystem.h"
 using namespace sf;
 
 void SteeringComponent::update(double dt) {
@@ -22,11 +22,12 @@ SteeringComponent::SteeringComponent(Entity* p, Entity* player)
       _path(Path(p, player, 100.0f)), Component(p) {}
 
 bool SteeringComponent::validMove(const sf::Vector2f& pos) const {
-  if (pos.x < 0.0f || pos.x > Engine::GetWindow().getSize().x ||
-      pos.y < 0.0f || pos.y > Engine::GetWindow().getSize().y) {
-    return false;
-  }
-  return true;
+  //if (pos.x < 0.0f || pos.x > Engine::GetWindow().getSize().x ||
+  //    pos.y < 0.0f || pos.y > Engine::GetWindow().getSize().y) {
+  //  return false;
+  //}
+  //return true;
+    return (ls::getTileAt(pos + Vector2f(5.5f, 5.5f)) != ls::WALL && ls::getTileAt(pos - Vector2f(5.5f, 5.5f)) != ls::WALL);
 }
 
 void SteeringComponent::move(const sf::Vector2f &p){
