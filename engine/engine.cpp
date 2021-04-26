@@ -18,7 +18,7 @@ static bool loading = false;
 static float loadingspinner = 0.f;
 static float loadingTime;
 static RenderWindow* _window;
-
+static bool fullscreen;
 void Loading_update(float dt, const Scene* const scn) {
   //  cout << "Eng: Loading Screen\n";
   if (scn->isLoaded()) {
@@ -88,6 +88,7 @@ void Engine::Start(unsigned int width, unsigned int height,
   Renderer::initialise(window);
   Physics::initialise();
   window.setMouseCursor(cursor);
+  window.setVerticalSyncEnabled(true);
   Engine::GetWindow().setMouseCursor(cursor);
   GetWindow().setMouseCursorGrabbed(true);
   ChangeScene(scn);
@@ -105,6 +106,10 @@ void Engine::Start(unsigned int width, unsigned int height,
     }
     if (Keyboard::isKeyPressed(Keyboard::Escape)) {
       window.close();
+    }   
+    if (Keyboard::isKeyPressed(Keyboard::Return)) {
+        window.create(VideoMode(2560, 1440), "apew", fullscreen? Style::Default : Style::Fullscreen);
+        fullscreen = !fullscreen;
     }
 
     window.clear();

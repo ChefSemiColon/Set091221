@@ -15,12 +15,16 @@ void MenuScene::Load() {
         "MAIN MENU");  }
   setLoaded(true);
 }
-
+void MenuScene::UnLoad() { Scene::UnLoad(); }
 void MenuScene::Update(const double& dt) {
   // cout << "Menu Update "<<dt<<"\n";
      if (sf::Keyboard::isKeyPressed(Keyboard::Num2)) {
          Engine::GetWindow().setSize(Vector2u(1280,720));
          Engine::ChangeScene(&game);
+     }
+     if (sf::Keyboard::isKeyPressed(Keyboard::Num0)) {
+         Engine::GetWindow().setSize(Vector2u(1280, 720));
+
      }
 
   Scene::Update(dt);
