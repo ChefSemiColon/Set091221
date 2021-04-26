@@ -6,3 +6,5 @@
 
 extern MenuScene menu;
 extern GameScene game;
+extern int numEnemiesAlive;
+extern std::vector<std::shared_ptr<Entity>> enemies;
