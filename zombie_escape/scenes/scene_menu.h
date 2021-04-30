@@ -12,4 +12,6 @@ public:
   void UnLoad() override;
 
   void Update(const double& dt) override;
+  void Render() override;
+
 };

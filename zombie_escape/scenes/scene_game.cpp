@@ -166,7 +166,7 @@ void GameScene::Load() {
 		auto sm = enemy->addComponent<StateMachineComponent>();
 		sm->addState("path", make_shared<PathState>(enemy, player));
 		sm->addState("seek", make_shared<SeekState>(enemy, player));
-		enemy->addComponent<HurtComponent>();
+		//enemy->addComponent<HurtComponent>();
 		auto decision = make_shared<DistanceDecision>(
 			player,
 			415.0f,
@@ -199,20 +199,24 @@ void GameScene::Load() {
 
 }
 
-void GameScene::UnLoad() { player.reset(); ls::unload(); Scene::UnLoad(); }
+void GameScene::UnLoad() { player.reset(); ls::unload(); Scene::UnLoad(); bullets.clear(); enemies.clear(); }
 
 void GameScene::Update(const double& dt) {
 	waveUpdate(dt);
 	if (activeBullets == 500) {
 		activeBullets = 0;
 	}
-	
+
 
 	auto tempView = View(player->getPosition(), Vector2f(cameraSize));
 
 	//tempView.zoom(5.5f);
 	tempView.zoom(0.5f);
 	Engine::GetWindow().setView(tempView);
+	if (sf::Keyboard::isKeyPressed(Keyboard::P)) {
+		
+		Engine::ChangeScene(&menu);
+	}
 	Scene::Update(dt);
 }
 

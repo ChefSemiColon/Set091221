@@ -15,7 +15,7 @@ int main() {
 	musicBuffer.loadFromFile("res/audio/BackGroundMusic.wav");
 	music.setBuffer(musicBuffer);
 	music.setLoop(true);
-	music.setVolume(25.f);
+	music.setVolume(5.f);
 	music.play();
 	Engine::Start(1920, 1080, "Zombie Escape", &menu);
 
