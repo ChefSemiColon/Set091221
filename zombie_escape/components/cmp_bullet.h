@@ -5,10 +5,11 @@
 
 class Bullet : public Component {
 protected:
-	void fire() const;
-	std::vector<std::shared_ptr<Entity>> enemies;
 
+	float bulletSpeed = 300.f;
+	sf::Vector2f bulletVel;
 public:
+	void fire(sf::Vector2f dir, sf::Vector2f pos);
 	void update(double dt) override;
 	void render() override {}
 	explicit Bullet(Entity* p);
