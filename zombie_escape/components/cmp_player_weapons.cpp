@@ -1,20 +1,30 @@
 #include "cmp_player_weapons.h"
 #include <engine.h>
 #include "../game.h"
+#include "../weapons/pistol.h"
+#include "../weapons/assualt.h"
 using namespace std;
 using namespace sf;
 
-void PlayerWeapon::update(double dt) {
-    
-    for(int i=0; i<numEnemiesAlive;++i)
-        if (length(enemies[i]->getPosition() - _parent->getPosition()) < 25.0) {
-            enemies[i]->setPosition({ -1000,-1000 });
-            enemies[i]->setAlive(false);
-            _parent->setPosition({ -1000,-1000 });
-            _parent->setAlive(false);
+shared_ptr<Gun> currentWeapon;
+shared_ptr<Pistol> pistol;
+shared_ptr<Assault> assault;
 
-        }
-    
+void PlayerWeapon::update(double dt) {
+    if (weaponTimer < 0.0f) {
+        currentWeapon = assault;
+    }
+    currentWeapon->update(dt, _parent->getPosition());
 }
 
-PlayerWeapon::PlayerWeapon(Entity* p) : Component(p) {}
+
+PlayerWeapon::PlayerWeapon(Entity* p) : Component(p) {
+    pistol = make_shared<Pistol>();
+    assault = make_shared<Assault>();
+    weaponTimer = 10.0f; 
+    currentWeapon = pistol;
+}
+
+Gun::Gun()
+{
+}
