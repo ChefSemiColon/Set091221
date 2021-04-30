@@ -3,6 +3,7 @@
 #include "SFML/Audio.hpp"
 
 MenuScene menu;
+SettingsScene settings;
 GameScene game;
 std::vector<std::shared_ptr<Entity>> enemies;
 std::vector<std::shared_ptr<Entity>> bullets;
