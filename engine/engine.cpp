@@ -87,9 +87,18 @@ void Engine::Start(unsigned int width, unsigned int height,
   _window = &window;
   Renderer::initialise(window);
   Physics::initialise();
+
+  cursor.loadFromSystem(Cursor::Cross);
   window.setMouseCursor(cursor);
+<<<<<<< Updated upstream
   Engine::GetWindow().setMouseCursor(cursor);
+=======
+  window.setVerticalSyncEnabled(true);
+  GetWindow().setMouseCursor(cursor);
+>>>>>>> Stashed changes
   GetWindow().setMouseCursorGrabbed(true);
+
+  GetWindow().setMouseCursorVisible(true);
   ChangeScene(scn);
   while (window.isOpen()) {
     Event event;
