@@ -11,8 +11,17 @@ void MenuScene::Load() {
   cout << "Menu Load \n";
   {
     auto txt = makeEntity();
-    auto t = txt->addComponent<TextComponent>(
-        "MAIN MENU");  }
+    // Can't use dynamic position for menu since the game size is bigger than the window, so in smaller screen menu might get hidden
+    //float gameWidth = Engine::getWindowSize().x;
+    //float gameHeight = Engine::getWindowSize().y;
+    auto startGameMenu = txt->addComponent<TextComponent>("Start Game");
+    //startGameMenu->SetPosition(sf::Vector2f((gameWidth / 1.5f), (gameHeight / 1.5f)));
+    startGameMenu->SetPosition(sf::Vector2f(200.0f, 100.0f));
+    auto settingsMenu = txt->addComponent<TextComponent>("Settings");
+    settingsMenu->SetPosition(sf::Vector2f(200.0f, 150.0f));
+    //settingsMenu->SetPosition(sf::Vector2f((gameWidth / 1.5f), (gameHeight / 2.0f)));
+
+  }
   setLoaded(true);
 }
 void MenuScene::UnLoad() { Scene::UnLoad(); }

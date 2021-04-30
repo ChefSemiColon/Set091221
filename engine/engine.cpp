@@ -18,7 +18,7 @@ static bool loading = false;
 static float loadingspinner = 0.f;
 static float loadingTime;
 static RenderWindow* _window;
-static bool fullscreen;
+static bool fullscreen = false;
 void Loading_update(float dt, const Scene* const scn) {
   //  cout << "Eng: Loading Screen\n";
   if (scn->isLoaded()) {
@@ -107,20 +107,20 @@ void Engine::Start(unsigned int width, unsigned int height,
     if (Keyboard::isKeyPressed(Keyboard::Escape)) {
       window.close();
     }   
-    /*if (Keyboard::isKeyPressed(Keyboard::Return)) {
-        window.create(VideoMode(2560, 1440), "apew", fullscreen? Style::Default : Style::Fullscreen);
-        fullscreen = !fullscreen;
-    }*/
-
-    // Press F for fullscreen 2560x1440 resolution and 16:9 aspect ratio
-    if (sf::Keyboard::isKeyPressed(Keyboard::F)) {
-        window.create(VideoMode(2560, 1440), _gameName, sf::Style::Fullscreen);
-        //window.setFramerateLimit(60);
-    }
-    // Press D for windowed 1280x720 resolution and 16:9 aspect ratio
-    if (sf::Keyboard::isKeyPressed(Keyboard::D)) {
-        _window->create(VideoMode(1280, 720), _gameName, sf::Style::Default);
-        //window.setFramerateLimit(60);
+    // Press RETURN to change between fullscreen 2560x1440 resolution and 16:9 aspect ratio OR windowed 1280x720 resolution and 16:9 aspect ratio
+    if (Keyboard::isKeyPressed(Keyboard::Return)) {
+        if (fullscreen)
+        {
+            window.create(VideoMode(1280, 720), gameName, sf::Style::Default);
+            fullscreen = !fullscreen;
+            //window.setFramerateLimit(60);
+        }
+        else
+        {
+            window.create(VideoMode(2560, 1440), gameName, sf::Style::Fullscreen);
+            fullscreen = !fullscreen;
+            //window.setFramerateLimit(60);
+        }
     }
 
 
