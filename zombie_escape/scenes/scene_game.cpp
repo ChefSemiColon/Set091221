@@ -19,12 +19,12 @@
 #include "../components/cmp_hurt_player.h"
 #include "../game.h"
 #include "../components/cmp_bullet.h"
+#include "../components/cmp_player_weapons.h"
+#include <cmath>
 using namespace std;
 using namespace std::chrono;
 using namespace sf;
 shared_ptr<Entity> player;
-vector<shared_ptr<Entity>> enemies;
-vector<shared_ptr<Entity>> bullets;
 Vector2f cameraSize;
 shared_ptr<PathfindingComponent> ai;
 sf::View view;
@@ -33,10 +33,13 @@ float radius = 405.f;
 static int waveMax = 10;
 float waveStartTimer = 20.0f;
 bool spawnOverTime = false;
-float spawnOverTimeTimerSet = 5.0f;
-float spawnOverTimeTimer = 0.0f;
+float spawnOverTimeTimerSet = 2.0f;
+float spawnOverTimeTimer = 5.0f;
 float OneSecondTimer = 1.0f;
-int numEnemiesAlive;
+
+shared_ptr<Texture> wallSprite;
+shared_ptr<Texture> floorSprite;
+
 //picks a random position that is valid, spawns enemies off screen but near the player
 Vector2f getRandValidPos() {
 	Vector2f pos = Vector2f(float(rand() % 50 - 25), float(rand() % 50 - 25));
@@ -57,15 +60,19 @@ void setUpWave(int enemiesAliveAlready, int numToSpawn) {
 	numToSpawn = numToSpawn + enemiesAliveAlready;
 	for (enemiesAliveAlready; enemiesAliveAlready < numToSpawn; ++enemiesAliveAlready) {
 		enemies[enemiesAliveAlready]->setAlive(true);
-		enemies[enemiesAliveAlready]->setPosition(getRandValidPos());
+		auto temp = getRandValidPos();
+		enemies[enemiesAliveAlready]->setPosition(temp);
+		enemies[enemiesAliveAlready]->setVisible(true);;
+
 		numEnemiesAlive++;
 	}
 }
 
 void waveUpdate(const double& dt) {
-	if (numEnemiesAlive == 0) {
-		auto waveMaxTemp = waveMax + (waveMax / 2);
-		waveMaxTemp <= 1000 ? waveMax = waveMaxTemp : waveMax = 1000;
+	if (numEnemiesAlive == enemiesKilled) {
+		numEnemiesAlive = 0;
+		enemiesKilled = 0;
+		waveMax = min(int(waveMax * 1.25f), 796);
 		waveStartTimer = 7.0f;
 		spawnOverTime = true;
 		spawnOverTimeTimer = spawnOverTimeTimerSet;
@@ -75,15 +82,16 @@ void waveUpdate(const double& dt) {
 		if (spawnOverTime) {
 			int enemiesToSpawnNow = waveMax / spawnOverTimeTimerSet;
 			setUpWave(numEnemiesAlive, enemiesToSpawnNow);
-			spawnOverTimeTimer -= dt;
+			
 			if (spawnOverTimeTimer <= 0) {
 				spawnOverTime = false;
 			}
 			OneSecondTimer = 1.0f;
 		}
 	}
-	else {
-		OneSecondTimer -= dt;
+	OneSecondTimer -= dt;
+	if (spawnOverTime) {
+		spawnOverTimeTimer -= dt;
 	}
 }
 
@@ -91,10 +99,48 @@ void waveUpdate(const double& dt) {
 void GameScene::Load() {
 	srand(static_cast <unsigned> (time(0)));
 	cameraSize = Vector2f(Engine::GetWindow().getSize());
+	wallSprite = make_shared<Texture>();
+	wallSprite->loadFromFile("res/img/Brick_Wall.png");
+	floorSprite = make_shared<Texture>();
+	floorSprite->loadFromFile("res/img/ground.png");
+
 
 	Physics::GetWorld()->SetGravity(b2Vec2(0, 0));
 	ls::loadLevelFile("res/level_1.txt", 200.0f);
+	{
+		{
+			auto start = ls::findTiles(ls::START);
+			auto pos = ls::getTilePosition(start[0]);
+			auto e = makeEntity();
+			e->setPosition(pos);
+			auto s = e->addComponent<SpriteComponent>();
+			s->setTexure(floorSprite);
+		}
 
+		auto floor = ls::findTiles(ls::EMPTY);
+		for (auto f : floor) {
+			auto pos = ls::getTilePosition(f);
+			auto e = makeEntity();
+			e->setPosition(pos);
+			auto s = e->addComponent<SpriteComponent>();
+			s->setTexure(floorSprite);
+
+
+		}
+		//Bow2D Wall Colliders
+		auto walls = ls::findTiles(ls::WALL);
+		for (auto w : walls) {
+			auto pos = ls::getTilePosition(w);
+			//pos += Vector2f(100.f, 100.f);
+			auto e = makeEntity();
+			e->setPosition(pos);
+			e->addComponent<PhysicsComponent>(false, Vector2f(200.f, 200.f));
+			auto s = e->addComponent<SpriteComponent>();
+			s->setTexure(wallSprite);
+
+			//e->setAlive(false);
+		}
+	}
 
 	//Player
 	player = makeEntity();
@@ -102,8 +148,9 @@ void GameScene::Load() {
 	player->setPosition(ls::getTilePosition(ls::findTiles(ls::START)[0]));
 	s->setShape<CircleShape>(10.0f);
 	s->getShape().setFillColor(Color::Red);
-	s->getShape().setOrigin(10, 10);
+	s->getShape().setOrigin(5, 5);
 	player->addComponent<BasicMovementComponent>();
+	player->addComponent<PlayerWeapon>();
 	player->addTag("player");
 
 	//Enemies Pool
@@ -139,9 +186,10 @@ void GameScene::Load() {
 			bullet->setPosition({ -1000,-1000 });
 			bullet->setAlive(false);
 			auto s = bullet->addComponent<ShapeComponent>();
-			s->setShape<RectangleShape>(Vector2f(10.0f, 10.0f));
-			s->getShape().setFillColor(Color::White);
+			s->setShape<CircleShape>(5.0f);
+			s->getShape().setFillColor(Color::Blue);
 			bullet->addComponent<Bullet>();
+			bullets.push_back(bullet);
 		}
 	}
 
@@ -149,27 +197,20 @@ void GameScene::Load() {
 	//First wave setup
 	setUpWave(0, 10);
 
-	//Bow2D Wall Colliders
-	auto walls = ls::findTiles(ls::WALL);
-	for (auto w : walls) {
-		auto pos = ls::getTilePosition(w);
-		pos += Vector2f(100.f, 100.f);
-		auto e = makeEntity();
-		e->setPosition(pos);
-		e->addComponent<PhysicsComponent>(false, Vector2f(200.f, 200.f));
-		e->setAlive(false);
-	}
 }
 
 void GameScene::UnLoad() { player.reset(); ls::unload(); Scene::UnLoad(); }
 
 void GameScene::Update(const double& dt) {
 	waveUpdate(dt);
-
+	if (activeBullets == 500) {
+		activeBullets = 0;
+	}
+	
 
 	auto tempView = View(player->getPosition(), Vector2f(cameraSize));
-	tempView.zoom(10.5f);
-	tempView.zoom(0.05f);
+	tempView.zoom(5.5f);
+	tempView.zoom(0.5f);
 	Engine::GetWindow().setView(tempView);
 	Scene::Update(dt);
 }
