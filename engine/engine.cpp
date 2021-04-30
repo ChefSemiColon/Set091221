@@ -90,12 +90,9 @@ void Engine::Start(unsigned int width, unsigned int height,
 
   cursor.loadFromSystem(Cursor::Cross);
   window.setMouseCursor(cursor);
-<<<<<<< Updated upstream
   Engine::GetWindow().setMouseCursor(cursor);
-=======
   window.setVerticalSyncEnabled(true);
   GetWindow().setMouseCursor(cursor);
->>>>>>> Stashed changes
   GetWindow().setMouseCursorGrabbed(true);
 
   GetWindow().setMouseCursorVisible(true);
