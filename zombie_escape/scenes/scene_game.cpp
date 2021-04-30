@@ -166,7 +166,7 @@ void GameScene::Load() {
 		auto sm = enemy->addComponent<StateMachineComponent>();
 		sm->addState("path", make_shared<PathState>(enemy, player));
 		sm->addState("seek", make_shared<SeekState>(enemy, player));
-		//enemy->addComponent<HurtComponent>();
+		enemy->addComponent<HurtComponent>();
 		auto decision = make_shared<DistanceDecision>(
 			player,
 			415.0f,
@@ -209,7 +209,8 @@ void GameScene::Update(const double& dt) {
 	
 
 	auto tempView = View(player->getPosition(), Vector2f(cameraSize));
-	tempView.zoom(5.5f);
+
+	//tempView.zoom(5.5f);
 	tempView.zoom(0.5f);
 	Engine::GetWindow().setView(tempView);
 	Scene::Update(dt);
