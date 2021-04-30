@@ -107,19 +107,18 @@ void Engine::Start(unsigned int width, unsigned int height,
     if (Keyboard::isKeyPressed(Keyboard::Escape)) {
       window.close();
     }   
-    // Press RETURN to change between fullscreen 2560x1440 resolution and 16:9 aspect ratio OR windowed 1280x720 resolution and 16:9 aspect ratio
-    if (Keyboard::isKeyPressed(Keyboard::Return)) {
+    // Press 4 to change between fullscreen and windowed
+    if (Keyboard::isKeyPressed(Keyboard::Num4)) {
+        auto windowSize = Engine::GetWindow().getSize();
         if (fullscreen)
         {
-            window.create(VideoMode(1280, 720), gameName, sf::Style::Default);
+            window.create(VideoMode(windowSize.x, windowSize.y), gameName, sf::Style::Default);
             fullscreen = !fullscreen;
-            //window.setFramerateLimit(60);
         }
         else
         {
-            window.create(VideoMode(2560, 1440), gameName, sf::Style::Fullscreen);
+            window.create(VideoMode(windowSize.x, windowSize.y), gameName, sf::Style::Fullscreen);
             fullscreen = !fullscreen;
-            //window.setFramerateLimit(60);
         }
     }
 

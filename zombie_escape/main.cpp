@@ -2,6 +2,7 @@
 #include "engine.h"
 
 MenuScene menu;
+SettingsScene settings;
 GameScene game;
 int main() {
 
