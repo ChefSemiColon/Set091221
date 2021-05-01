@@ -1,5 +1,5 @@
 //"scene_game.cpp"
-
+#define _USE_MATH_DEFINES
 #include "scene_game.h"
 #include "../components/cmp_sprite.h"
 #include "../components/cmp_physics.h"
@@ -217,6 +217,15 @@ void GameScene::Update(const double& dt) {
 
 
 	auto tempView = View(player->getPosition(), Vector2f(cameraSize));
+
+	// Calculations for the player to point to the mouse position
+	Vector2f playerPos = player->getPosition();
+	Vector2i mousePos = Mouse::getPosition(Engine::GetWindow());
+	Vector2f mousePos2 = Engine::GetWindow().mapPixelToCoords(mousePos);
+	float dx = playerPos.x - mousePos2.x;
+	float dy = playerPos.y - mousePos2.y;
+	float rotation = (atan2(dy, dx)) * 180 / M_PI;
+	player->setRotation(rotation + 180);
 
 	//tempView.zoom(5.5f);
 	tempView.zoom(0.5f);
