@@ -11,9 +11,13 @@ void DeadScene::Load() {
   cout << "Game over screen Load \n";
   {
     auto txt = makeEntity();
+
+    string score = "Score:   " + to_string(enemiesKilled * 2);
     // Text on screen
     auto deadText = txt->addComponent<TextComponent>("You have joined the horde!");
     deadText->SetPosition(Vector2f(Engine::GetWindow().getSize().x/2-300, Engine::GetWindow().getSize().y/2-200));
+    auto scoreText = txt->addComponent<TextComponent>(score);
+    scoreText->SetPosition(Vector2f(Engine::GetWindow().getSize().x / 2 - 300, Engine::GetWindow().getSize().y / 2 - 100));
     auto backToMenu = txt->addComponent<TextComponent>("Press P to go back to menu.");
     backToMenu->SetPosition(Vector2f(Engine::GetWindow().getSize().x/2-300, Engine::GetWindow().getSize().y/2));
   }
