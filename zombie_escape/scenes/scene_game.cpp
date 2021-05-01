@@ -162,10 +162,11 @@ void GameScene::Load() {
 	for (size_t n = 0; n < 2000; ++n) {
 		auto enemy = makeEntity();
 		enemy->setPosition(Vector2f(-100, -100));
+		/*auto s = enemy->addComponent<SpriteComponent>();
+		s->setTexure(zombieSprite);
+		s->getSprite().setScale(0.2f, 0.2f);
+		s->getSprite().setOrigin(70, 70);*/
 		auto s = enemy->addComponent<ShapeComponent>();
-		/*s->setTexure(zombieSprite);
-		s->getSprite().setScale(0.2f, 0.2f);*/
-		//s->getSprite().setOrigin(70, 70);
 		s->setShape<RectangleShape>(Vector2f(10.0f, 10.0f));
 		s->getShape().setFillColor(Color::Green);
 		enemy->setAlive(false);
