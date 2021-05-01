@@ -39,6 +39,8 @@ float OneSecondTimer = 1.0f;
 
 shared_ptr<Texture> wallSprite;
 shared_ptr<Texture> floorSprite;
+shared_ptr<Texture> playerSprite;
+shared_ptr<Texture> zombieSprite;
 
 //picks a random position that is valid, spawns enemies off screen but near the player
 Vector2f getRandValidPos() {
@@ -103,7 +105,10 @@ void GameScene::Load() {
 	wallSprite->loadFromFile("res/img/Brick_Wall.png");
 	floorSprite = make_shared<Texture>();
 	floorSprite->loadFromFile("res/img/ground.png");
-
+	playerSprite = make_shared<Texture>();
+	playerSprite->loadFromFile("res/img/player.png");
+	zombieSprite = make_shared<Texture>();
+	zombieSprite->loadFromFile("res/img/zombie.png");
 
 	Physics::GetWorld()->SetGravity(b2Vec2(0, 0));
 	ls::loadLevelFile("res/level_1.txt", 200.0f);
@@ -144,11 +149,11 @@ void GameScene::Load() {
 
 	//Player
 	player = makeEntity();
-	auto s = player->addComponent<ShapeComponent>();
+	auto s = player->addComponent<SpriteComponent>();
 	player->setPosition(ls::getTilePosition(ls::findTiles(ls::START)[0]));
-	s->setShape<CircleShape>(10.0f);
-	s->getShape().setFillColor(Color::Red);
-	s->getShape().setOrigin(5, 5);
+	s->setTexure(playerSprite);
+	s->getSprite().setScale(0.2f, 0.2f);
+	s->getSprite().setOrigin(70, 70);
 	player->addComponent<BasicMovementComponent>();
 	player->addComponent<PlayerWeapon>();
 	player->addTag("player");
@@ -158,6 +163,9 @@ void GameScene::Load() {
 		auto enemy = makeEntity();
 		enemy->setPosition(Vector2f(-100, -100));
 		auto s = enemy->addComponent<ShapeComponent>();
+		/*s->setTexure(zombieSprite);
+		s->getSprite().setScale(0.2f, 0.2f);*/
+		//s->getSprite().setOrigin(70, 70);
 		s->setShape<RectangleShape>(Vector2f(10.0f, 10.0f));
 		s->getShape().setFillColor(Color::Green);
 		enemy->setAlive(false);
