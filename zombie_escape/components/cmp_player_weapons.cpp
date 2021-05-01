@@ -11,23 +11,26 @@ shared_ptr<Pistol> pistol;
 shared_ptr<Assault> assault;
 
 void PlayerWeapon::update(double dt) {
-    if (weaponTimer < 0.0f) {
-        currentWeapon = assault;
-    }
-    if (weaponTimer < -10.0f) {
-        currentWeapon = assault;
-        weaponTimer = 10.0f;
-    }
-    weaponTimer -= dt;
-    currentWeapon->update(dt, _parent->getPosition());
+	if (weaponTimer < 0.0f) {
+		if (weaponTimer < -10.0f) {
+			currentWeapon = assault;
+			weaponTimer = 10.0f;
+		}
+		else {
+			currentWeapon = pistol;
+		}
+	}
+
+	weaponTimer -= dt;
+	currentWeapon->update(dt, _parent->getPosition());
 }
 
 
 PlayerWeapon::PlayerWeapon(Entity* p) : Component(p) {
-    pistol = make_shared<Pistol>();
-    assault = make_shared<Assault>();
-    weaponTimer = 10.0f; 
-    currentWeapon = pistol;
+	pistol = make_shared<Pistol>();
+	assault = make_shared<Assault>();
+	weaponTimer = 10.0f;
+	currentWeapon = pistol;
 }
 
 Gun::Gun()
