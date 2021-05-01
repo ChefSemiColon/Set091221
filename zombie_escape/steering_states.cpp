@@ -24,8 +24,6 @@ void PathState::execute(Entity* owner, double dt) noexcept {
 }
 
 void SeekState::execute(Entity* owner, double dt) noexcept {
-    auto s = owner->get_components<ShapeComponent>();
-    s[0]->getShape().setFillColor(Color::Green);
     auto output = _steering.getSteering();
     owner->setPosition(owner->getPosition() + (output.direction * (float)dt));
 }
