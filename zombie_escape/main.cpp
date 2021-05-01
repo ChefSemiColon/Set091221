@@ -5,6 +5,7 @@
 MenuScene menu;
 SettingsScene settings;
 GameScene game;
+DeadScene gameOver;
 std::vector<std::shared_ptr<Entity>> enemies;
 std::vector<std::shared_ptr<Entity>> bullets;
 sf::SoundBuffer musicBuffer;

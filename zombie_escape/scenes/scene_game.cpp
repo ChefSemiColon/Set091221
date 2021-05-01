@@ -217,6 +217,10 @@ void GameScene::Update(const double& dt) {
 		Engine::GetWindow().setView(sf::View(sf::FloatRect(0, 0, Engine::GetWindow().getSize().x, Engine::GetWindow().getSize().y)));
 		Engine::ChangeScene(&menu);
 	}
+	if (!player->isAlive()) {
+		Engine::GetWindow().setView(sf::View(sf::FloatRect(0, 0, Engine::GetWindow().getSize().x, Engine::GetWindow().getSize().y)));
+		Engine::ChangeScene(&gameOver);
+	}
 	Scene::Update(dt);
 }
 
