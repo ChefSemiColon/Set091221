@@ -14,6 +14,11 @@ void PlayerWeapon::update(double dt) {
     if (weaponTimer < 0.0f) {
         currentWeapon = assault;
     }
+    if (weaponTimer < -10.0f) {
+        currentWeapon = assault;
+        weaponTimer = 10.0f;
+    }
+    weaponTimer -= dt;
     currentWeapon->update(dt, _parent->getPosition());
 }
 
