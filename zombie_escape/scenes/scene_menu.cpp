@@ -16,6 +16,8 @@ void MenuScene::Load() {
     startGameMenu->SetPosition(sf::Vector2f(200.0f, 100.0f));
     auto settingsMenu = txt->addComponent<TextComponent>("2 - Settings");
     settingsMenu->SetPosition(sf::Vector2f(200.0f, 150.0f));
+    auto leaveTheGame = txt->addComponent<TextComponent>("ESC - Leave the game");
+    leaveTheGame->SetPosition(sf::Vector2f(200.0f, 200.0f));
 
   }
   setLoaded(true);
