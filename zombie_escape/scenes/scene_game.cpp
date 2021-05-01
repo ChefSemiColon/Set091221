@@ -166,9 +166,6 @@ void GameScene::Load() {
 		s->setTexure(zombieSprite);
 		s->getSprite().setScale(0.2f, 0.2f);
 		s->getSprite().setOrigin(70, 70);
-		//auto s = enemy->addComponent<ShapeComponent>();
-		//s->setShape<RectangleShape>(Vector2f(10.0f, 10.0f));
-		//s->getShape().setFillColor(Color::Green);
 		enemy->setAlive(false);
 		enemy->addComponent<PathfindingComponent>();
 
@@ -228,6 +225,16 @@ void GameScene::Update(const double& dt) {
 	float rotation = (atan2(dy, dx)) * 180 / M_PI;
 	player->setRotation(rotation + 180);
 
+	// Calculation for the zombies to point towards the player
+	for (int i = 0; i < enemies.size(); i++) {
+		Vector2f zombiePos = enemies[i]->getPosition();
+		Vector2f playerPos = player->getPosition();
+		float dx = zombiePos.x - playerPos.x;
+		float dy = zombiePos.y - playerPos.y;
+		float rotation = (atan2(dy, dx)) * 180 / M_PI;
+		enemies[i]->setRotation(rotation + 180);
+	}
+	
 	//tempView.zoom(5.5f);
 	tempView.zoom(0.5f);
 	Engine::GetWindow().setView(tempView);
