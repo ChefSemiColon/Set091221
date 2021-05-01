@@ -165,7 +165,7 @@ void GameScene::Load() {
 		auto s = enemy->addComponent<SpriteComponent>();
 		s->setTexure(zombieSprite);
 		s->getSprite().setScale(0.2f, 0.2f);
-		s->getSprite().setOrigin(70, 70);
+		s->getSprite().setOrigin(100, 100);
 		enemy->setAlive(false);
 		enemy->addComponent<PathfindingComponent>();
 
