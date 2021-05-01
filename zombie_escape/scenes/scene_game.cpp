@@ -214,7 +214,7 @@ void GameScene::Update(const double& dt) {
 	tempView.zoom(0.5f);
 	Engine::GetWindow().setView(tempView);
 	if (sf::Keyboard::isKeyPressed(Keyboard::P)) {
-		
+		Engine::GetWindow().setView(sf::View(sf::FloatRect(0, 0, Engine::GetWindow().getSize().x, Engine::GetWindow().getSize().y)));
 		Engine::ChangeScene(&menu);
 	}
 	Scene::Update(dt);
