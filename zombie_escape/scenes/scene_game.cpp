@@ -41,6 +41,7 @@ shared_ptr<Texture> wallSprite;
 shared_ptr<Texture> floorSprite;
 shared_ptr<Texture> playerSprite;
 shared_ptr<Texture> zombieSprite;
+shared_ptr<Texture> bulletSprite;
 
 //picks a random position that is valid, spawns enemies off screen but near the player
 Vector2f getRandValidPos() {
@@ -109,6 +110,8 @@ void GameScene::Load() {
 	playerSprite->loadFromFile("res/img/player.png");
 	zombieSprite = make_shared<Texture>();
 	zombieSprite->loadFromFile("res/img/zombie.png");
+	bulletSprite = make_shared<Texture>();
+	bulletSprite->loadFromFile("res/img/bullet.png");
 
 	Physics::GetWorld()->SetGravity(b2Vec2(0, 0));
 	ls::loadLevelFile("res/level_1.txt", 200.0f);
@@ -191,9 +194,10 @@ void GameScene::Load() {
 			auto bullet = makeEntity();
 			bullet->setPosition({ -1000,-1000 });
 			bullet->setAlive(false);
-			auto s = bullet->addComponent<ShapeComponent>();
-			s->setShape<CircleShape>(5.0f);
-			s->getShape().setFillColor(Color::Blue);
+
+			auto s = bullet->addComponent<SpriteComponent>();
+			s->setTexure(bulletSprite);
+			s->getSprite().setScale(0.5f, 0.5f);
 			bullet->addComponent<Bullet>();
 			bullets.push_back(bullet);
 		}
