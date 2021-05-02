@@ -159,7 +159,7 @@ void GameScene::Load() {
 	player->setPosition(ls::getTilePosition(ls::findTiles(ls::START)[0]));
 	s->setTexure(playerSprite);
 	s->getSprite().setScale(0.2f, 0.2f);
-	s->getSprite().setOrigin(70, 70);
+	s->getSprite().setOrigin(100, 120);
 	player->addComponent<BasicMovementComponent>();
 	player->addComponent<PlayerWeapon>();
 	player->addTag("player");
@@ -171,14 +171,14 @@ void GameScene::Load() {
 		auto s = enemy->addComponent<SpriteComponent>();
 		s->setTexure(zombieSprite);
 		s->getSprite().setScale(0.2f, 0.2f);
-		s->getSprite().setOrigin(100, 100);
+		s->getSprite().setOrigin(120, 160);
 		enemy->setAlive(false);
 		enemy->addComponent<PathfindingComponent>();
 
 		auto sm = enemy->addComponent<StateMachineComponent>();
 		sm->addState("path", make_shared<PathState>(enemy, player));
 		sm->addState("seek", make_shared<SeekState>(enemy, player));
-		enemy->addComponent<HurtComponent>();
+		//enemy->addComponent<HurtComponent>();
 		auto decision = make_shared<DistanceDecision>(
 			player,
 			415.0f,
