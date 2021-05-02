@@ -153,6 +153,31 @@ void GameScene::Load() {
 		}
 	}
 
+		auto floor = ls::findTiles(ls::EMPTY);
+		for (auto f : floor) {
+			auto pos = ls::getTilePosition(f);
+			auto e = makeEntity();
+			e->setPosition(pos);
+			auto s = e->addComponent<SpriteComponent>();
+			s->setTexure(floorSprite);
+
+
+		}
+		//Bow2D Wall Colliders
+		auto walls = ls::findTiles(ls::WALL);
+		for (auto w : walls) {
+			auto pos = ls::getTilePosition(w);
+
+			auto e = makeEntity();
+			e->setPosition(pos);
+			e->addComponent<PhysicsComponent>(false, Vector2f(200.f, 200.f));
+			auto s = e->addComponent<SpriteComponent>();
+			s->setTexure(wallSprite);
+
+			//e->setAlive(false);
+		}
+	}
+
 	//Player
 	player = makeEntity();
 	auto s = player->addComponent<SpriteComponent>();
@@ -178,7 +203,7 @@ void GameScene::Load() {
 		auto sm = enemy->addComponent<StateMachineComponent>();
 		sm->addState("path", make_shared<PathState>(enemy, player));
 		sm->addState("seek", make_shared<SeekState>(enemy, player));
-		//enemy->addComponent<HurtComponent>();
+		enemy->addComponent<HurtComponent>();
 		auto decision = make_shared<DistanceDecision>(
 			player,
 			415.0f,
@@ -221,7 +246,7 @@ void GameScene::Update(const double& dt) {
 	}
 
 
-	auto tempView = View(player->getPosition(), Vector2f(cameraSize));
+
 
 	// Calculations for the player to point to the mouse position
 	Vector2f playerPos = player->getPosition();
@@ -241,9 +266,28 @@ void GameScene::Update(const double& dt) {
 		float rotation = (atan2(dy, dx)) * 180 / M_PI;
 		enemies[i]->setRotation(rotation + 180);
 	}
-	
-	//tempView.zoom(5.5f);
-	tempView.zoom(0.5f);
+
+
+	// Calculations for the player to point to the mouse position
+	Vector2f playerPos = player->getPosition();
+	Vector2i mousePos = Mouse::getPosition(Engine::GetWindow());
+	Vector2f mousePos2 = Engine::GetWindow().mapPixelToCoords(mousePos);
+	float dx = playerPos.x - mousePos2.x;
+	float dy = playerPos.y - mousePos2.y;
+	float rotation = (atan2(dy, dx)) * 180 / M_PI;
+	player->setRotation(rotation + 180);
+
+	// Calculation for the zombies to point towards the player
+	for (int i = 0; i < enemies.size(); i++) {
+		Vector2f zombiePos = enemies[i]->getPosition();
+		Vector2f playerPos = player->getPosition();
+		float dx = zombiePos.x - playerPos.x;
+		float dy = zombiePos.y - playerPos.y;
+		float rotation = (atan2(dy, dx)) * 180 / M_PI;
+		enemies[i]->setRotation(rotation + 180);
+	}
+	auto tempView = View(player->getPosition(), Vector2f(cameraSize));
+	tempView.zoom(0.35f);
 	Engine::GetWindow().setView(tempView);
 	if (sf::Keyboard::isKeyPressed(Keyboard::P))
 	{

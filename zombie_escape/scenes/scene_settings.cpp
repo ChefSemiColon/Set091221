@@ -3,10 +3,11 @@
 #include "../game.h"
 #include <SFML/Window/Keyboard.hpp>
 #include <iostream>
+#include "scene_game.h"
 
 using namespace std;
 using namespace sf;
-
+View viewRes;
 void SettingsScene::Load() {
   cout << "Settings Load \n";
   {
@@ -24,19 +25,37 @@ void SettingsScene::Load() {
     backToMenu->SetPosition(Vector2f(200.0f, 300.0f));
 
   }
+  viewRes.setSize(Vector2f(Engine::GetWindow().getSize()));
+  Engine::GetWindow().setView(viewRes);
   setLoaded(true);
 }
 void SettingsScene::UnLoad() { Scene::UnLoad(); }
 void SettingsScene::Update(const double& dt) {
      // Change resolution based on user input
      if (Keyboard::isKeyPressed(Keyboard::Num1)) {
-         Engine::GetWindow().setSize(Vector2u(2560,1440));
+         auto scale = 1080.f / Engine::GetWindow().getSize().y;
+         View visArea(Vector2f(1280,720), Vector2f(2560, 1440));
+         Engine::GetWindow().setView(visArea);
+         View tempZoom = Engine::GetWindow().getView();
+         tempZoom.zoom(scale);
+         Engine::GetWindow().setView(sf::View(tempZoom));
      }
      if (Keyboard::isKeyPressed(Keyboard::Num2)) {
-         Engine::GetWindow().setSize(Vector2u(1280, 720));
+         auto scale = 1080.f / Engine::GetWindow().getSize().y;
+         View visArea(Vector2f(640, 360), Vector2f(1280, 720));
+         Engine::GetWindow().setView(visArea);
+         View tempZoom = Engine::GetWindow().getView();
+         tempZoom.zoom(scale);
+         Engine::GetWindow().setView(sf::View(tempZoom));
      }
      if (Keyboard::isKeyPressed(Keyboard::Num3)) {
-         Engine::GetWindow().setSize(Vector2u(1920, 1080));
+         auto scale = 1080.f / Engine::GetWindow().getSize().y;
+         View visArea(Vector2f(960, 540), Vector2f(1920, 1080));
+         Engine::GetWindow().setView(visArea);
+         View tempZoom = Engine::GetWindow().getView();
+         tempZoom.zoom(scale);
+         Engine::GetWindow().setView(sf::View(tempZoom));
+
      }
      if (Keyboard::isKeyPressed(Keyboard::Num5)) {
          Engine::ChangeScene(&menu);
