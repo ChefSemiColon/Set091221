@@ -37,7 +37,7 @@ void Bullet::update(double dt) {
         if (ls::getTileAt(pos + Vector2f(10.5f, 10.5f)) != ls::WALL && ls::getTileAt(pos - Vector2f(10.5f, 10.5f)) != ls::WALL) {
         _parent->setPosition(pos);
         for (int i = 0; i < numEnemiesAlive; ++i)
-            if (length(enemies[i]->getPosition() - _parent->getPosition()) < 20.0f) {
+            if (length(enemies[i]->getPosition() - _parent->getPosition()) < 35.0f) {
                 enemies[i]->setPosition({ -1000.0f,-1000.0f });
                 enemies[i]->setVisible(false);
                 enemies[i]->setAlive(false);
@@ -45,6 +45,7 @@ void Bullet::update(double dt) {
                 _parent->setAlive(false);
                 _parent->setVisible(false);
                 enemiesKilled++;
+                enemiesKilledTotal++;
                 break;
             }
         }

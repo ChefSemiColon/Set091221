@@ -40,9 +40,9 @@ void DeadScene::Load() {
   {
     auto txt = makeEntity();
 
-    string score = "Score: " + to_string(randomScore(enemiesKilled, 50, 75, 100)) + "    ||    Numbers of enemies killed: " + to_string(enemiesKilled);
+    string score = "Score: " + to_string(randomScore(enemiesKilledTotal, 50, 75, 100)) + "    ||    Numbers of enemies killed: " + to_string(enemiesKilledTotal);
     // Reset the enemies killed counter
-    enemiesKilled = 0;
+    enemiesKilledTotal = 0;
     // Text on screen
     auto deadText = txt->addComponent<TextComponent>("You have joined the horde!");
     deadText->SetPosition(Vector2f(Engine::GetWindow().getSize().x/2-300, Engine::GetWindow().getSize().y/2-200));

@@ -100,6 +100,9 @@ void waveUpdate(const double& dt) {
 
 
 void GameScene::Load() {
+	numEnemiesAlive = 0;
+	enemiesKilledTotal = 0;
+	enemiesKilled = 0;
 	srand(static_cast <unsigned> (time(0)));
 	cameraSize = Vector2f(Engine::GetWindow().getSize());
 	wallSprite = make_shared<Texture>();
