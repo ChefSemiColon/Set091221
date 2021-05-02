@@ -9,16 +9,16 @@ using namespace std;
 // Checks keyboard and moves the player.
 void BasicMovementComponent::update(double dt) {
 	Vector2f direction(0.0f, 0.0f);
-	if (Keyboard::isKeyPressed(Keyboard::Left)) {
+	if (Keyboard::isKeyPressed(Keyboard::A)) {
 		direction.x -= 1.0f;
 	}
-	if (Keyboard::isKeyPressed(Keyboard::Right)) {
+	if (Keyboard::isKeyPressed(Keyboard::D)) {
 		direction.x += 1.0f;
 	}
-	if (Keyboard::isKeyPressed(Keyboard::Up)) {
+	if (Keyboard::isKeyPressed(Keyboard::W)) {
 		direction.y -= 1.0f;
 	}
-	if (Keyboard::isKeyPressed(Keyboard::Down)) {
+	if (Keyboard::isKeyPressed(Keyboard::S)) {
 		direction.y += 1.0f;
 	}
 	move(normalize(direction) * _speed * (float)dt);

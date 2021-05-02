@@ -25,5 +25,9 @@ void PathState::execute(Entity* owner, double dt) noexcept {
 
 void SeekState::execute(Entity* owner, double dt) noexcept {
     auto output = _steering.getSteering();
-    owner->setPosition(owner->getPosition() + (output.direction * (float)dt));
+    auto pos = owner->getPosition() + (output.direction * (float)dt);
+    if (ls::getTileAt(pos + Vector2f(10.5f, 10.5f)) != ls::WALL && ls::getTileAt(pos - Vector2f(10.5f, 10.5f)) != ls::WALL) {
+        owner->setPosition(pos);
+    }
+
 }

@@ -103,6 +103,10 @@ void GameScene::Load() {
 	numEnemiesAlive = 0;
 	enemiesKilledTotal = 0;
 	enemiesKilled = 0;
+	spawnOverTime = false;
+	spawnOverTimeTimerSet = 2.0f;
+	spawnOverTimeTimer = 5.0f;
+	OneSecondTimer = 1.0f;
 	srand(static_cast <unsigned> (time(0)));
 	cameraSize = Vector2f(Engine::GetWindow().getSize());
 	wallSprite = make_shared<Texture>();
@@ -176,7 +180,7 @@ void GameScene::Load() {
 
 			//e->setAlive(false);
 		}
-	}
+	
 
 	//Player
 	player = makeEntity();
@@ -244,29 +248,6 @@ void GameScene::Update(const double& dt) {
 	if (activeBullets == 500) {
 		activeBullets = 0;
 	}
-
-
-
-
-	// Calculations for the player to point to the mouse position
-	Vector2f playerPos = player->getPosition();
-	Vector2i mousePos = Mouse::getPosition(Engine::GetWindow());
-	Vector2f mousePos2 = Engine::GetWindow().mapPixelToCoords(mousePos);
-	float dx = playerPos.x - mousePos2.x;
-	float dy = playerPos.y - mousePos2.y;
-	float rotation = (atan2(dy, dx)) * 180 / M_PI;
-	player->setRotation(rotation + 180);
-
-	// Calculation for the zombies to point towards the player
-	for (int i = 0; i < enemies.size(); i++) {
-		Vector2f zombiePos = enemies[i]->getPosition();
-		Vector2f playerPos = player->getPosition();
-		float dx = zombiePos.x - playerPos.x;
-		float dy = zombiePos.y - playerPos.y;
-		float rotation = (atan2(dy, dx)) * 180 / M_PI;
-		enemies[i]->setRotation(rotation + 180);
-	}
-
 
 	// Calculations for the player to point to the mouse position
 	Vector2f playerPos = player->getPosition();
