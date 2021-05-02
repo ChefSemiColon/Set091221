@@ -87,6 +87,15 @@ void Engine::Start(unsigned int width, unsigned int height,
   _window = &window;
   Renderer::initialise(window);
   Physics::initialise();
+  {
+      auto scale = 1080.f / 1080;
+      View visArea(Vector2f(960, 540), Vector2f(1920, 1080));
+      window.setView(sf::View(visArea));
+      View tempZoom = window.getView();
+      tempZoom.zoom(scale);
+      window.setView(sf::View(tempZoom));
+  }
+  cursor.loadFromSystem(Cursor::Cross);
   window.setMouseCursor(cursor);
   window.setVerticalSyncEnabled(true);
   Engine::GetWindow().setMouseCursor(cursor);
@@ -98,7 +107,13 @@ void Engine::Start(unsigned int width, unsigned int height,
         if (event.type == sf::Event::Resized)
         {
             sf::FloatRect visibleArea(0.f, 0.f, event.size.width, event.size.height);
-            window.setView(sf::View(visibleArea));
+            auto scale = 1080.f / event.size.height;
+            View visArea(Vector2f(960, 540), Vector2f(1920, 1080));
+            window.setView(sf::View(visArea));
+            View tempZoom = window.getView();
+            tempZoom.zoom(scale);
+            window.setView(sf::View(tempZoom));
+
         }
       if (event.type == Event::Closed) {
         window.close();
