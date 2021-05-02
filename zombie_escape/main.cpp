@@ -12,6 +12,7 @@ sf::SoundBuffer musicBuffer;
 sf::Sound music;
 int activeBullets=0;
 int enemiesKilled=0;
+int enemiesKilledTotal=0;
 int numEnemiesAlive;
 int main() {
 	musicBuffer.loadFromFile("res/audio/BackGroundMusic.wav");

@@ -33,7 +33,7 @@ void Bullet::update(double dt) {
     if (_parent->isAlive()) {
         _parent->setPosition(_parent->getPosition()+ bulletVel *float(dt));
         for (int i = 0; i < numEnemiesAlive; ++i)
-            if (length(enemies[i]->getPosition() - _parent->getPosition()) < 20.0f) {
+            if (length(enemies[i]->getPosition() - _parent->getPosition()) < 35.0f) {
                 enemies[i]->setPosition({ -1000.0f,-1000.0f });
                 enemies[i]->setVisible(false);
                 enemies[i]->setAlive(false);
@@ -41,6 +41,7 @@ void Bullet::update(double dt) {
                 _parent->setAlive(false);
                 _parent->setVisible(false);
                 enemiesKilled++;
+                enemiesKilledTotal++;
                 break;
             }
     }

@@ -16,3 +16,4 @@ extern std::vector<std::shared_ptr<Entity>> enemies;
 extern std::vector<std::shared_ptr<Entity>> bullets;
 extern int activeBullets;
 extern int enemiesKilled;
+extern int enemiesKilledTotal;
