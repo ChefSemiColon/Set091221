@@ -89,14 +89,6 @@ void Engine::Start(unsigned int width, unsigned int height,
   Renderer::initialise(window);
   Physics::initialise();
 
-  {
-      auto scale = 1080.f / 1080;
-      View visArea(Vector2f(960, 540), Vector2f(1920, 1080));
-      window.setView(sf::View(visArea));
-      View tempZoom = window.getView();
-      tempZoom.zoom(scale);
-      window.setView(sf::View(tempZoom));
-  }
   cursor.loadFromSystem(Cursor::Cross);
   window.setMouseCursor(cursor);
   Engine::GetWindow().setMouseCursor(cursor);
@@ -109,17 +101,6 @@ void Engine::Start(unsigned int width, unsigned int height,
   while (window.isOpen()) {
     Event event;
     while (window.pollEvent(event)) {
-        if (event.type == sf::Event::Resized)
-        {
-            sf::FloatRect visibleArea(0.f, 0.f, event.size.width, event.size.height);
-            auto scale = 1080.f / event.size.height;
-            View visArea(Vector2f(960, 540), Vector2f(1920, 1080));
-            window.setView(sf::View(visArea));
-            View tempZoom = window.getView();
-            tempZoom.zoom(scale);
-            window.setView(sf::View(tempZoom));
-
-        }
       if (event.type == Event::Closed) {
         window.close();
       }
@@ -127,15 +108,15 @@ void Engine::Start(unsigned int width, unsigned int height,
 
     // Press 4 to change between fullscreen and windowed
     if (Keyboard::isKeyPressed(Keyboard::Num4)) {
-        auto windowSize = Engine::GetWindow().getSize();
         if (fullscreen)
         {
-            window.create(VideoMode(windowSize.x, windowSize.y), gameName, sf::Style::Default);
+            auto windowSize = getWindowSize();
+            window.create(VideoMode(windowSize.x, windowSize.y), gameName, sf::Style::Close);
             fullscreen = !fullscreen;
         }
         else
         {
-            window.create(VideoMode(windowSize.x, windowSize.y), gameName, sf::Style::Fullscreen);
+            window.create(VideoMode::getFullscreenModes()[0], gameName, sf::Style::Fullscreen);
             fullscreen = !fullscreen;
         }
     }

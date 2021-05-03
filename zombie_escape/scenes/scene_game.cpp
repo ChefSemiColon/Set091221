@@ -108,7 +108,7 @@ void GameScene::Load() {
 	spawnOverTimeTimer = 5.0f;
 	OneSecondTimer = 1.0f;
 	srand(static_cast <unsigned> (time(0)));
-	cameraSize = Vector2f(Engine::GetWindow().getSize());
+	cameraSize = Vector2f(Engine::GetWindow().getView().getSize());
 	wallSprite = make_shared<Texture>();
 	wallSprite->loadFromFile("res/img/Brick_Wall.png");
 	floorSprite = make_shared<Texture>();
@@ -267,8 +267,10 @@ void GameScene::Update(const double& dt) {
 		float rotation = (atan2(dy, dx)) * 180 / M_PI;
 		enemies[i]->setRotation(rotation + 180);
 	}
+
+	auto scale = (720.f / cameraSize.y)*0.5f;
 	auto tempView = View(player->getPosition(), Vector2f(cameraSize));
-	tempView.zoom(0.35f);
+	tempView.zoom(scale);
 	Engine::GetWindow().setView(tempView);
 	if (sf::Keyboard::isKeyPressed(Keyboard::P))
 	{
