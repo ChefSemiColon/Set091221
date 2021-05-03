@@ -6,6 +6,11 @@ SettingsScene settings;
 GameScene game;
 int main() {
 
-	Engine::Start(1920, 1080, "Zombie Escape", &menu);
+	musicBuffer.loadFromFile("res/audio/BackGroundMusic.wav");
+	music.setBuffer(musicBuffer);
+	music.setLoop(true);
+	music.setVolume(5.f);
+	music.play();
+	Engine::Start(1280, 720, "Zombie Escape", &menu);
 
 }

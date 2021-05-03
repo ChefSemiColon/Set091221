@@ -90,7 +90,18 @@ void waveUpdate(const double& dt) {
 
 void GameScene::Load() {
 	srand(static_cast <unsigned> (time(0)));
-	cameraSize = Vector2f(Engine::GetWindow().getSize());
+
+	cameraSize = Vector2f(Engine::GetWindow().getView().getSize());
+	wallSprite = make_shared<Texture>();
+	wallSprite->loadFromFile("res/img/Brick_Wall.png");
+	floorSprite = make_shared<Texture>();
+	floorSprite->loadFromFile("res/img/ground.png");
+	playerSprite = make_shared<Texture>();
+	playerSprite->loadFromFile("res/img/player.png");
+	zombieSprite = make_shared<Texture>();
+	zombieSprite->loadFromFile("res/img/zombie.png");
+	bulletSprite = make_shared<Texture>();
+	bulletSprite->loadFromFile("res/img/bullet.png");
 
 	Physics::GetWorld()->SetGravity(b2Vec2(0, 0));
 	ls::loadLevelFile("res/level_1.txt", 200.0f);
@@ -212,8 +223,10 @@ void GameScene::Update(const double& dt) {
 		float rotation = (atan2(dy, dx)) * 180 / M_PI;
 		enemies[i]->setRotation(rotation + 180);
 	}
+
+	auto scale = (720.f / cameraSize.y)*0.5f;
 	auto tempView = View(player->getPosition(), Vector2f(cameraSize));
-	tempView.zoom(0.35f);
+	tempView.zoom(scale);
 	Engine::GetWindow().setView(tempView);
 	Scene::Update(dt);
 }
